@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Planner Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-blob bg-blob--1" aria-hidden="true"></div>
+    <div class="bg-blob bg-blob--2" aria-hidden="true"></div>
+
+    <header class="app-header">
+      <div class="container">
+        <div class="brand">
+          <div class="brand__icon" aria-hidden="true">💰</div>
+          <div class="brand__text">
+            <h1 class="brand__title">Budget Planner Pro</h1>
+            <p class="brand__subtitle">Smart Financial Management</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn--ghost" id="btnDemo" type="button" title="Fill with demo data">
+            Demo data
+          </button>
+          <button class="btn btn--ghost" id="btnExport" type="button" title="Export your data">
+            Export
+          </button>
+          <button class="btn btn--danger" id="btnReset" type="button" title="Reset all data">
+            Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container app-main">
+      <nav class="tabs" aria-label="Primary">
+        <button class="tab is-active" data-tab="dashboard" type="button">
+          <span class="tab__icon" aria-hidden="true">📊</span>
+          Dashboard
+        </button>
+        <button class="tab" data-tab="transactions" type="button">
+          <span class="tab__icon" aria-hidden="true">🧾</span>
+          Transactions
+        </button>
+        <button class="tab" data-tab="budgets" type="button">
+          <span class="tab__icon" aria-hidden="true">🗂️</span>
+          Budgets
+        </button>
+        <button class="tab" data-tab="goals" type="button">
+          <span class="tab__icon" aria-hidden="true">🎯</span>
+          Savings Goals
+        </button>
+
+        <div class="tabs__right">
+          <div class="chip" id="monthChip" title="Currently selected month">
+            <span class="chip__dot" aria-hidden="true"></span>
+            <span id="monthLabel">This month</span>
+          </div>
+          <button class="btn btn--primary btn--sm" id="btnQuickAdd" type="button">
+            + Quick add
+          </button>
+        </div>
+      </nav>
+
+      <section class="summary">
+        <article class="card metric" data-animate="floatIn">
+          <div class="metric__top">
+            <div class="metric__icon metric__icon--income" aria-hidden="true">💵</div>
+            <div class="metric__meta">
+              <div class="metric__label">Total income</div>
+              <div class="metric__value" id="metricIncome">₹0.00</div>
+              <div class="metric__hint">All time</div>
+            </div>
+          </div>
+          <div class="metric__spark">
+            <div class="sparkbar" id="sparkIncome" aria-hidden="true"></div>
+          </div>
+        </article>
+
+        <article class="card metric" data-animate="floatIn">
+          <div class="metric__top">
+            <div class="metric__icon metric__icon--expense" aria-hidden="true">💸</div>
+            <div class="metric__meta">
+              <div class="metric__label">Total expenses</div>
+              <div class="metric__value" id="metricExpenses">₹0.00</div>
+              <div class="metric__hint">All time</div>
+            </div>
+          </div>
+          <div class="metric__spark">
+            <div class="sparkbar" id="sparkExpenses" aria-hidden="true"></div>
+          </div>
+        </article>
+
+        <article class="card metric" data-animate="floatIn">
+          <div class="metric__top">
+            <div class="metric__icon metric__icon--balance" aria-hidden="true">🪙</div>
+            <div class="metric__meta">
+              <div class="metric__label">Balance</div>
+              <div class="metric__value" id="metricBalance">₹0.00</div>
+              <div class="metric__hint" id="metricBalanceHint">Current balance</div>
+            </div>
+          </div>
+          <div class="metric__spark">
+            <div class="sparkbar" id="sparkBalance" aria-hidden="true"></div>
+          </div>
+        </article>
+
+        <article class="card metric" data-animate="floatIn">
+          <div class="metric__top">
+            <div class="metric__icon metric__icon--goal" aria-hidden="true">🎯</div>
+            <div class="metric__meta">
+              <div class="metric__label">Savings progress</div>
+              <div class="metric__value" id="metricSavings">₹0.00</div>
+              <div class="metric__hint" id="metricSavingsHint">Across goals</div>
+            </div>
+          </div>
+          <div class="metric__spark">
+            <div class="sparkbar" id="sparkSavings" aria-hidden="true"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panels">
+        <section class="panel is-active" id="panel-dashboard" data-panel="dashboard">
+          <div class="grid-3">
+            <article class="card block" data-animate="riseIn">
+              <header class="block__header">
+                <div class="block__title">
+                  <span class="block__icon" aria-hidden="true">🧮</span>
+                  Monthly Budget
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm" id="btnAddBudget" type="button">
+                    + Category
+                  </button>
+                </div>
+              </header>
+              <div class="block__body">
+                <div class="donut-wrap">
+                  <div class="donut" id="donut" aria-hidden="true">
+                    <svg viewBox="0 0 120 120" class="donut__svg">
+                      <defs>
+                        <linearGradient id="gradBudget" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0%" stop-color="var(--accent)" />
+                          <stop offset="100%" stop-color="var(--accent2)" />
+                        </linearGradient>
+                      </defs>
+                      <circle class="donut__track" cx="60" cy="60" r="46" />
+                      <circle class="donut__value" id="donutValue" cx="60" cy="60" r="46" />
+                    </svg>
+                    <div class="donut__center">
+                      <div class="donut__pct" id="budgetUsedPct">0%</div>
+                      <div class="donut__sub">of monthly budget used</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list" id="budgetList"></div>
+              </div>
+            </article>
+
+            <article class="card block" data-animate="riseIn">
+              <header class="block__header">
+                <div class="block__title">
+                  <span class="block__icon" aria-hidden="true">🔥</span>
+                  Top Spending
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm" id="btnAddExpense" type="button">
+                    + Expense
+                  </button>
+                </div>
+              </header>
+              <div class="block__body">
+                <div class="mini-chart">
+                  <canvas id="spendChart" width="560" height="180" aria-label="Top spending chart"></canvas>
+                </div>
+                <div class="list" id="topSpendingList"></div>
+              </div>
+            </article>
+
+            <article class="card block" data-animate="riseIn">
+              <header class="block__header">
+                <div class="block__title">
+                  <span class="block__icon" aria-hidden="true">🏁</span>
+                  Savings Goals Progress
+                </div>
+                <div class="block__actions">
+                  <button class="btn btn--ghost btn--sm" id="btnAddGoal" type="button">
+                    + Goal
+                  </button>
+                </div>
+              </header>
+              <div class="block__body">
+                <div class="list" id="goalsProgressList"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-transactions" data-panel="transactions">
+          <div class="card block">
+            <header class="block__header">
+              <div class="block__title">
+                <span class="block__icon" aria-hidden="true">🧾</span>
+                Transactions
+              </div>
+              <div class="block__actions">
+                <div class="seg" role="group" aria-label="Transaction filters">
+                  <button class="seg__btn is-active" data-filter="all" type="button">All</button>
+                  <button class="seg__btn" data-filter="income" type="button">Income</button>
+                  <button class="seg__btn" data-filter="expense" type="button">Expense</button>
+                </div>
+                <button class="btn btn--primary btn--sm" id="btnAddTx" type="button">+ Add</button>
+              </div>
+            </header>
+            <div class="block__body">
+              <div class="tx-toolbar">
+                <div class="field field--search">
+                  <span class="field__icon" aria-hidden="true">🔎</span>
+                  <input
+                    id="txSearch"
+                    type="search"
+                    placeholder="Search by title, category…"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="txMonth">Month</label>
+                  <input id="txMonth" type="month" />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="txSort">Sort</label>
+                  <select id="txSort">
+                    <option value="date_desc">Newest</option>
+                    <option value="date_asc">Oldest</option>
+                    <option value="amount_desc">Amount (high)</option>
+                    <option value="amount_asc">Amount (low)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table class="table" aria-label="Transactions table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th class="align-right">Amount</th>
+                      <th class="align-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="txTableBody"></tbody>
+                </table>
+              </div>
+              <div class="empty" id="txEmpty">
+                <div class="empty__icon" aria-hidden="true">🪄</div>
+                <div class="empty__title">No transactions yet</div>
+                <div class="empty__subtitle">Add your first income or expense to see insights.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-budgets" data-panel="budgets">
+          <div class="card block">
+            <header class="block__header">
+              <div class="block__title">
+                <span class="block__icon" aria-hidden="true">🗂️</span>
+                Budgets
+              </div>
+              <div class="block__actions">
+                <button class="btn btn--primary btn--sm" id="btnAddBudget2" type="button">
+                  + Add category
+                </button>
+              </div>
+            </header>
+            <div class="block__body">
+              <div class="budgets-grid" id="budgetsGrid"></div>
+              <div class="empty" id="budgetsEmpty">
+                <div class="empty__icon" aria-hidden="true">🧩</div>
+                <div class="empty__title">No budget categories</div>
+                <div class="empty__subtitle">Add categories to track spending per month.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-goals" data-panel="goals">
+          <div class="card block">
+            <header class="block__header">
+              <div class="block__title">
+                <span class="block__icon" aria-hidden="true">🎯</span>
+                Savings Goals
+              </div>
+              <div class="block__actions">
+                <button class="btn btn--primary btn--sm" id="btnAddGoal2" type="button">
+                  + Add goal
+                </button>
+              </div>
+            </header>
+            <div class="block__body">
+              <div class="goals-grid" id="goalsGrid"></div>
+              <div class="empty" id="goalsEmpty">
+                <div class="empty__icon" aria-hidden="true">🌱</div>
+                <div class="empty__title">No goals yet</div>
+                <div class="empty__subtitle">Create goals and contribute anytime.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <dialog class="modal" id="modal">
+      <form class="modal__card" method="dialog" id="modalForm">
+        <header class="modal__header">
+          <div>
+            <div class="modal__title" id="modalTitle">Add</div>
+            <div class="modal__subtitle" id="modalSubtitle">Fill the details</div>
+          </div>
+          <button class="icon-btn" value="cancel" aria-label="Close" type="submit">✕</button>
+        </header>
+
+        <div class="modal__body" id="modalBody"></div>
+
+        <footer class="modal__footer">
+          <button class="btn btn--ghost" value="cancel" type="submit">Cancel</button>
+          <button class="btn btn--primary" id="modalPrimary" value="default" type="submit">
+            Save
+          </button>
+        </footer>
+      </form>
+    </dialog>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
